@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finora - Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">₹</div>
+        <div>
+          <h2>Finora</h2>
+          <p>Personal finance</p>
+        </div>
+      </div>
+
+      <p class="menu-label">WORKSPACE</p>
+
+      <nav>
+        <a href="#dashboard" class="nav-link active">▦ Dashboard</a>
+        <a href="#transactions" class="nav-link">▤ Transactions</a>
+        <a href="#savings" class="nav-link">◎ Savings</a>
+      </nav>
+
+      <div class="goal-mini">
+        <p>◎ <span>DEMO GOAL</span></p>
+        <h3>Emergency fund</h3>
+        <p>Goal: ₹50,000</p>
+        <div class="progress-track">
+          <div id="sidebarProgress" class="progress-fill"></div>
+        </div>
+        <small id="sidebarPercent">0% of target</small>
+      </div>
+    </aside>
+
+    <main class="main" id="dashboard">
+      <header class="topbar">
+        <div>
+          <p class="muted">Personal overview</p>
+          <h1>Your finances</h1>
+          <p class="muted">Track your money. Build better habits.</p>
+        </div>
+
+        <div class="header-actions">
+          <button id="themeButton" class="icon-button" title="Toggle dark mode">☾</button>
+          <button id="addButton" class="primary-button">＋ Add transaction</button>
+        </div>
+      </header>
+
+      <section class="summary-grid">
+        <article class="summary-card">
+          <div class="card-heading">
+            <span>Total balance</span><span class="icon-box">₹</span>
+          </div>
+          <h2 id="balance">₹0</h2>
+          <p class="muted">Income minus expenses</p>
+        </article>
+
+        <article class="summary-card">
+          <div class="card-heading">
+            <span>Total income</span><span class="icon-box green">↗</span>
+          </div>
+          <h2 id="income">₹0</h2>
+          <p class="muted">All recorded income</p>
+        </article>
+
+        <article class="summary-card">
+          <div class="card-heading">
+            <span>Total expenses</span><span class="icon-box orange">↘</span>
+          </div>
+          <h2 id="expenses">₹0</h2>
+          <p class="muted">All recorded expenses</p>
+        </article>
+
+        <article class="summary-card">
+          <div class="card-heading">
+            <span>Savings rate</span><span class="icon-box">◎</span>
+          </div>
+          <h2 id="savingsRate">0%</h2>
+          <p class="muted">Based on recorded income</p>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Cash flow</h3>
+              <p class="muted">Income and expenses over six months</p>
+            </div>
+            <span class="tag">Last 6 months</span>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="cashFlowChart"></canvas>
+          </div>
+
+          <div class="legend">
+            <span><i class="dot green-dot"></i> Income</span>
+            <span><i class="dot orange-dot"></i> Expenses</span>
+          </div>
+        </article>
+
+        <article class="panel" id="savings">
+          <h3>Savings goal</h3>
+          <p class="muted">Emergency fund target</p>
+
+          <div class="circle-wrap">
+            <div class="circle-progress" id="circleProgress">
+              <div class="circle-inner">
+                <span class="target-icon">◎</span>
+                <h2 id="goalPercent">0%</h2>
+                <small class="muted">of target</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="goal-details">
+            <div>
+              <p class="muted">Current balance</p>
+              <h3 id="goalBalance">₹0</h3>
+            </div>
+            <div class="align-right">
+              <p class="muted">Target</p>
+              <h3>₹50,000</h3>
+            </div>
+          </div>
+
+          <div id="goalMessage" class="goal-message">
+            Keep recording your income and expenses to track your progress.
+          </div>
+        </article>
+      </section>
+
+      <section class="panel transactions-panel" id="transactions">
+        <div class="panel-heading">
+          <div>
+            <h3>Recent transactions</h3>
+            <p class="muted">Your income and spending history</p>
+          </div>
+          <button id="addButton2" class="outline-button">＋ Add new</button>
+        </div>
+
+        <div class="filters">
+          <input id="searchInput" type="search"
+                 placeholder="⌕ Search transactions..."
+                 aria-label="Search transactions">
+
+          <select id="filterSelect" aria-label="Filter transactions">
+            <option value="All">All transactions</option>
+            <option value="income">Income only</option>
+            <option value="expense">Expenses only</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th class="align-right">Amount</th>
+                <th class="align-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="transactionList"></tbody>
+          </table>
+        </div>
+
+        <p id="emptyMessage" class="empty-message" hidden>
+          No transactions found. Try another search or add a transaction.
+        </p>
+        <p class="muted count-label" id="transactionCount"></p>
+      </section>
+
+      <footer>
+        Finora Personal Finance Tracker · Demo project · Your financial future, organized.
+      </footer>
+    </main>
+  </div>
+
+  <!-- Add Transaction Modal -->
+  <div class="modal" id="transactionModal" hidden>
+    <form id="transactionForm" class="modal-card">
+      <div class="modal-heading">
+        <div>
+          <h2>Add transaction</h2>
+          <p class="muted">Record your money movement</p>
+        </div>
+        <button type="button" id="closeModal" class="icon-button">✕</button>
+      </div>
+
+      <label>Transaction type</label>
+      <div class="type-buttons">
+        <button type="button" class="type-button selected" data-type="expense">Expense</button>
+        <button type="button" class="type-button" data-type="income">Income</button>
+      </div>
+
+      <label for="titleInput">Description</label>
+      <input id="titleInput" type="text" maxlength="80"
+             placeholder="e.g. Grocery shopping" required>
+
+      <label for="amountInput">Amount (₹)</label>
+      <input id="amountInput" type="number" min="0.01" step="0.01"
+             placeholder="Enter amount" required>
+
+      <label for="categoryInput">Category</label>
+      <select id="categoryInput" required></select>
+
+      <label for="dateInput">Date</label>
+      <input id="dateInput" type="date" required>
+
+      <button type="submit" class="primary-button save-button">Save transaction</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
